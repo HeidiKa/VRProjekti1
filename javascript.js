@@ -78,39 +78,51 @@ function hae() {
 }
 
 function tilavaihtu() {
-    if (xhr.readyState == 4) {
+    if (xhr.readyState === 4) {
+        var jsonData = JSON.parse(xhr.responseText);
 
-        console.log("haku OK");
-        var jsonData = xhr.responseText;
-        var junaArray = JSON.parse(jsonData);
 
+        for (var i = 0; i < jsonData.length; i++) {
+            var taulu = jsonData[i];
+
+            //luodaan tr-elementti
+            var lista = document.createElement("tr");
+            lista.setAttribute("id", i + "sarake");
         //console.dir(junaArray);
 
 
         document.getElementById("junalista").innerHTML ="";
 
-        var junalista = document.getElementById("junalista").innerHTML;
+            //luodaan muuttujat (junantyyppi, pvm yms.)
+            var tunnus = taulu.trainType + taulu.trainNumber;
+            var ajanEsitys = {hour: '2-digit', minute: '2-digit', hour12: false};
+            var lahtoAika = new Date(taulu.timeTableRows[0].scheduledTime).toLocaleTimeString("fi",ajanEsitys);
+            var saapumisAika = new Date(taulu.timeTableRows[taulu.timeTableRows.length-1].scheduledTime).toLocaleTimeString("fi",ajanEsitys);
+            var pvm = taulu.departureDate;
 
-        for (var i = 0; i < junaArray.length; i++) {
-            var junantiedot = "";
 
-            //junantiedot += (junaArray[i].departureDate);
-            junantiedot += "Junatyyppi: ";
-            junantiedot += (junaArray[i].trainType + junaArray[i].trainNumber);
-            junantiedot += " Aikataulu: ";
-            junantiedot += (junaArray[i].timeTableRows[0].scheduledTime);
 
-            // uusi lista elementti
-            var x = document.createElement("li");
+            lista.innerHTML = tunnus;
 
-            // haetaan JSONista haluttu data
-            var t = document.createTextNode(junantiedot);
+            //luodaan td-elementtejä ja lisätään ne luotuun tr-elementtiin
+            var lahto = document.createElement("td");
+            lahto.innerHTML = lahtoAika;
+            lista.appendChild(lahto);
 
-            x.appendChild(t);
-            document.getElementById("junalista").appendChild(x);
+            var saapuu = document.createElement("td");
+            saapuu.innerHTML = saapumisAika;
+            lista.appendChild(saapuu);
 
+            var paiva = document.createElement("td");
+            paiva.innerHTML = pvm;
+            lista.appendChild(paiva);
+
+            //hakee id perusteella html tiedostosta
+            document.getElementById("junalista").appendChild(lista);
 
         }
 
     }
 }
+
+
