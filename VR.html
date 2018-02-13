@@ -6,12 +6,24 @@
 
     <script src="javascript.js">
     </script>
+    <style>
+        #junalista {
+            padding: 1px;
+            border-spacing: 20px;
+        }
+        tr{
+            padding: 50px;
+            text-align: left;
+
+        }
+    </style>
 </head>
 <body>
 
 <div>
 
     <h1>Aikatauluhaku</h1>
+
 
     <div id="lomake">
         <!-- Kannattaako olla formissa? -->
@@ -25,16 +37,25 @@
 
     </div>
 
+
+
     <hr>
 
 
     <div id="hakutulokset">
 
-        <h2>Hakutulokset</h2>
+        <h2>Hakutulokset</h2> </br>
+        <h3>Reitti: </h3>
 
-        <ul id="junalista">
+        <table id="junalista">
+            <th>Junatunnus</th>
+            <th>Lähtöaika</th>
+            <th>Saapumisaika</th>
+            <th>Päivämäärä</th>
 
-        </ul>
+
+
+        </table>
 
     </div>
 
