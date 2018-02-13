@@ -1,13 +1,59 @@
+
+// -------------  JUNA-ASEMATIETOJEN HAKEMINEN ------------
+
+// Koodi hakee asemien asemakoodit käyttäjän haun perusteella
+
+var asemaArray;
+var xhr1 = new XMLHttpRequest();
+
+function asematiedot() {
+    xhr1.open("GET", "https://rata.digitraffic.fi/api/v1/metadata/stations");
+    xhr1.send(null);
+
+}
+
+// Funktio hakee asemien tiedot muuttujaksi
+// Käytetään asemien nimien lyhytkoodien hakemiseen käyttäjän haun perusteella
+asematiedot();
+
+xhr1.onreadystatechange = tilavaihtu1;
+
+function tilavaihtu1() {
+    if (xhr1.readyState == 4) {
+        jsonAsemat = xhr1.responseText;
+        asemaArray = JSON.parse(jsonAsemat);
+        //console.dir(asemaArray);
+    }
+}
+
+//--------------- JUNA-AIKATAULUJEN HAKEMINEN KÄYTTÄJÄN HAUN PERUSTEELLA -------------
 var xhr = new XMLHttpRequest();
-
-
 xhr.onreadystatechange = tilavaihtu;
 
 function hae() {
-    xhr.open("GET", "https://rata.digitraffic.fi/api/v1/live-trains/station/HKI/LH");
+    var lahtopaikka;
+    var maaranpaa;
+
+    // Hakee käyttäjän syöttämän lähtöaseman perusteella aseman lyhytkoodin
+    for (var i = 0; i < asemaArray.length; i++) {
+        if (document.getElementById("mista").value == asemaArray[i].stationName) {
+            console.log(asemaArray[i].stationShortCode);
+            lahtopaikka = asemaArray[i].stationShortCode;
+        }
+    }
+
+    // Hakee käyttäjän syöttämän saapumisaseman perusteella aseman lyhytkoodin
+    for (var i = 0; i < asemaArray.length; i++) {
+        if (document.getElementById("minne").value == asemaArray[i].stationName) {
+            console.log(asemaArray[i].stationShortCode);
+            maaranpaa = asemaArray[i].stationShortCode;
+        }
+    }
+
+    xhr.open("GET", "https://rata.digitraffic.fi/api/v1/live-trains/station/" + lahtopaikka +
+        "/" + maaranpaa);
     xhr.send(null);
 }
-
 
 function tilavaihtu() {
     if (xhr.readyState == 4) {
