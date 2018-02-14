@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Aikatauluhaku</title>
 
     <script src="javascript.js">
     </script>
@@ -27,17 +27,16 @@
 
     <div id="lomake">
         <!-- Kannattaako olla formissa? -->
-        <input type="text" id="mista" placeholder="Mistä lähdet"> </br>
-        <input type="text" id="minne" placeholder="Mihin matkustat"> </br>
+        <input type="text" id="mista" placeholder="Mistä lähdet" value="Helsinki asema"> </br>
+        <input type="text" id="minne" placeholder="Mihin matkustat" value="Turku asema"> </br>
         <input type="date" id="paivamaara" placeholder="Mihin matkustat"> </br> <!-- esitäyttö? -->
-        <input type="time" id="lahtoaika" placeholder="Mihin matkustat"> </br> <!-- esitäyttö? -->
+        <input type="time" id="kellonaika" placeholder="Mihin matkustat"> </br> <!-- esitäyttö? -->
         <button id="hae" onclick="hae()">Hae</button>
         </br>
 
-
     </div>
 
-
+    <div id="virheilmoitukset"> </div>
 
     <hr>
 
