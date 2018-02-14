@@ -149,13 +149,6 @@ function tilavaihtu() {
             lista.setAttribute("id", i + "sarake");
             console.dir(taulu[0]);
 
-
-            //junanTiedot.setAttribute("id", i + "juna")
-            // for (var j=0; j<timeTableRows.length; j++){
-            //     junanTiedot.innerHTML = taulu[i].timeTableRows[j].stationShortCode;
-            // }
-
-
             //luodaan muuttujat (junantyyppi, pvm yms.)
             var tunnus = taulu[i].trainType + taulu[i].trainNumber;
             var ajanEsitys = {hour: '2-digit', minute: '2-digit', hour12: false};
