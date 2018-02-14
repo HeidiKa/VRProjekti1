@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>$Title$</title>
 
-    <script src="javascript.js">
+    <script src="javascript.js" async>
     </script>
     <style>
         #junalista {
@@ -29,8 +29,8 @@
         <!-- Kannattaako olla formissa? -->
         <input type="text" id="mista" placeholder="Mistä lähdet" value="Helsinki asema"> </br>
         <input type="text" id="minne" placeholder="Mihin matkustat" value="Turku asema"> </br>
-        <input type="date" id="paivamaara" placeholder="Mihin matkustat"> </br> <!-- esitäyttö? -->
-        <input type="time" id="kellonaika" placeholder="Mihin matkustat"> </br> <!-- esitäyttö? -->
+        <input type="date" id="paivamaara"> </br> <!-- esitäyttö? -->
+        <input type="time" id="kellonaika"> </br> <!-- esitäyttö? -->
         <button id="hae" onclick="hae()">Hae</button>
         </br>
 
@@ -41,18 +41,16 @@
     <hr>
 
 
-    <div id="hakutulokset">
+    <div id="hakutulos">
 
-        <h2>Hakutulokset</h2> </br>
-        <h3>Reitti: </h3>
+        <h2 id="hakutulokset"></h2> </br>
+        <h3 id="reitti"></h3>
 
         <table id="junalista">
-            <th>Junatunnus</th>
-            <th>Lähtöaika</th>
-            <th>Saapumisaika</th>
-            <th>Päivämäärä</th>
 
-
+            <th id="junatunnus"></th>
+            <th id="lahtoaika"></th>
+            <th id="saapumisaika"></th>
 
         </table>
 
