@@ -10,7 +10,6 @@ function asematiedot() {
     xhr1.open("GET", "https://rata.digitraffic.fi/api/v1/metadata/stations");
     xhr1.send(null);
 }
-
 // Funktio hakee asemien tiedot muuttujaksi
 // Käytetään asemien nimien lyhytkoodien hakemiseen käyttäjän haun perusteella
 asematiedot();
@@ -50,12 +49,8 @@ function hae() {
         if (document.getElementById("mista").value.toUpperCase() == asemaArray[i].stationName.toUpperCase()) {
             lahtopaikka = asemaArray[i].stationShortCode;
 
-
-
         } else {
-
             // tähän vain tulostus
-
         }
     }
 
@@ -65,7 +60,6 @@ function hae() {
             maaranpaa = asemaArray[i].stationShortCode;
         }
     }
-
     // paivamaara URLiin haun perusteella
     paivamaara = document.getElementById("paivamaara").value;
 
@@ -78,9 +72,9 @@ function hae() {
 }
 
 function tilavaihtu() {
+
     if (xhr.readyState === 4) {
         var jsonData = JSON.parse(xhr.responseText);
-
 
         for (var i = 0; i < jsonData.length; i++) {
             var taulu = jsonData[i];
@@ -90,8 +84,7 @@ function tilavaihtu() {
             lista.setAttribute("id", i + "sarake");
         //console.dir(junaArray);
 
-
-        document.getElementById("junalista").innerHTML ="";
+        //document.getElementById("junalista").innerHTML ="";
 
             //luodaan muuttujat (junantyyppi, pvm yms.)
             var tunnus = taulu.trainType + taulu.trainNumber;
@@ -99,8 +92,6 @@ function tilavaihtu() {
             var lahtoAika = new Date(taulu.timeTableRows[0].scheduledTime).toLocaleTimeString("fi",ajanEsitys);
             var saapumisAika = new Date(taulu.timeTableRows[taulu.timeTableRows.length-1].scheduledTime).toLocaleTimeString("fi",ajanEsitys);
             var pvm = taulu.departureDate;
-
-
 
             lista.innerHTML = tunnus;
 
@@ -119,9 +110,7 @@ function tilavaihtu() {
 
             //hakee id perusteella html tiedostosta
             document.getElementById("junalista").appendChild(lista);
-
         }
-
     }
 }
 
