@@ -3,20 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Luo tunnus</title>
+
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+
 </head>
 <body>
 
+<!-- JOHANNA JA VELLU-->
+
+<!-- Tehdään lomake, jolla luodaan tunnus-->
 <div>
 
     <h2>Luo tunnus</h2>
-    <input type="text" id="kayttajatunnus-luotunnus" placeholder="Luo käyttäjätunnus"> </br>
-    <input type="password" id="salasana-luotunnus1" placeholder="Valitse salasana"> </br>
-    <input type="password" id="salasana-luotunnus2" placeholder="Kirjoita salasana uudestaan"> </br>
-    <button id="luotunnus-painike">Luo tunnus</button>
+    <input type="text" id="kayttajatunnusLuotunnus" placeholder="Luo käyttäjätunnus"> </br>
+    <input type="password" id="salasanaLuotunnus" placeholder="Valitse salasana"> </br></br>
+    <button id="luotunnus-painike" onclick="varastoi()">Luo tunnus</button>
     </br>
 
 </div>
 
+<script src="kayttaja.js">
+</script>
 
 </body>
 </html>

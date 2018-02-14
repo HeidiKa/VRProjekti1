@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>$Title$</title>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
 
     <script src="javascript.js">
+    </script>
+    <script src="kayttaja.js">
     </script>
     <style>
         #junalista {
@@ -43,15 +46,33 @@
     <div>
         <!-- NÄKYY VAIN JOS ON KRIJAUTUNUT-->
         </br>
-        <h2>Omat tiedot</h2>
-        <div>
+
+        <div id="omatTiedot">
+            <h2>Omat tiedot</h2>
             Suosikkiasema: TÄHÄN KOTIASEMA </br>
-            Suosikki reitti: TÄHÄN SUOSIKKIREITTI
+            Suosikkireitti: <span id="suosikkiReitti"></span>
         </div>
     </div>
 
 </div>
 
+
+<!-- JOHANNA JA VELLU-->
+
+<!-- Luodaan kirjautumislinkki ja rekisteröitymislinkki-->
+<div id="kirjauduLinkki">
+    <a href="kirjaudu.html">Kirjaudu sisään</a>
+    <a href="luotunnus.html">Rekisteröidy</a>
+</div>
+
+<!-- Luodaan napit suosikkireitin tallentamista ja valintaa varten-->
+<button id="suosikkiNappi" onclick="kaytaSuosikkiReittia()">Valitse suosikkireitti</button>
+<br>
+<br>
+<button id="tallennaSuosikkiReitti" onclick="tallennaSuosikkiReittiFunktio()">Tallenna reitti suosikiksi</button>
+
+
+<!-- JOHANNA JA VELLU-->
 
 <hr>
 
@@ -74,6 +95,39 @@
 
 
 </div>
+
+<script>
+
+    // JOHANNA JA VELLU
+
+    // MÄÄRITETTÄÄN NÄKYYKÖ SISÄÄNKIRJAUTUMISVALIKKO VAI EI
+    var kirjattu = sessionStorage.getItem("kirjautunut");
+    if (kirjattu === "true") {
+        document.getElementById("omatTiedot").style.display = 'block';
+        document.getElementById("kirjauduLinkki").style.display = 'none';
+        document.getElementById("suosikkiNappi").style.display = 'block';
+        document.getElementById("tallennaSuosikkiReitti").style.display = 'block';
+    } else {
+        document.getElementById("omatTiedot").style.display = 'none';
+        document.getElementById("kirjauduLinkki").style.display = 'block';
+        document.getElementById("suosikkiNappi").style.display = 'none';
+        document.getElementById("tallennaSuosikkiReitti").style.display = 'none';
+    }
+
+
+    // NTÄYTETÄÄN OMANT TALLENNETUT TIEDOT JOS NIITÄ ON
+
+    function paivitaSuosikkiasemat() {
+        var tallennettuLahtoasema = localStorage.getItem("suosikkiLahtoAsema");
+        var tallennettuKohdeasema = localStorage.getItem("suosikkiKohdeAsema");
+
+        document.getElementById("suosikkiReitti").innerHTML = "" + tallennettuLahtoasema + "-" + tallennettuKohdeasema;
+    }
+
+paivitaSuosikkiasemat();
+
+</script>
+
 
 </body>
 </html>
