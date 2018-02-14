@@ -37,6 +37,7 @@ function hae() {
     var paivamaara;
     var hakuaVastaavatLahtoAsemat = [];
 
+
     // Hakee käyttäjän syöttämän lähtöaseman perusteella aseman lyhytkoodin
     for (var i = 0; i < asemaArray.length; i++) {
 
