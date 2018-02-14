@@ -1,6 +1,6 @@
+// ALEKSI JA VELLU ----
 
 // -------------  JUNA-ASEMATIETOJEN HAKEMINEN ------------
-
 // Koodi hakee asemien asemakoodit käyttäjän haun perusteella
 
 var asemaArray;
@@ -35,7 +35,6 @@ function hae() {
     var lahtopaikka = "";
     var maaranpaa = "";
     var paivamaara;
-    var kellonaika;
     var hakuaVastaavatLahtoAsemat = [];
 
     // Hakee käyttäjän syöttämän lähtöaseman perusteella aseman lyhytkoodin
@@ -50,12 +49,8 @@ function hae() {
         if (document.getElementById("mista").value.toUpperCase() == asemaArray[i].stationName.toUpperCase()) {
             lahtopaikka = asemaArray[i].stationShortCode;
 
-
-
         } else {
-
             // tähän vain tulostus
-
         }
     }
 
@@ -69,7 +64,6 @@ function hae() {
     // paivamaara URLiin haun perusteella
     paivamaara = document.getElementById("paivamaara").value;
 
-    console.log(document.getElementById("kellonaika").value);
 
     // URLIN RAKENTAMINEN
     xhr.open("GET", "https://rata.digitraffic.fi/api/v1/live-trains/station/" + lahtopaikka +
@@ -77,10 +71,13 @@ function hae() {
     xhr.send(null);
 }
 
+// JOHANNA JA HEIDI -----------------------------------
+// HEATUN REITTITIEDON TULOSTAMINEN SIVULLE
+
+
 function tilavaihtu() {
     if (xhr.readyState === 4) {
         var jsonData = JSON.parse(xhr.responseText);
-
 
         for (var i = 0; i < jsonData.length; i++) {
             var taulu = jsonData[i];
@@ -91,7 +88,7 @@ function tilavaihtu() {
         //console.dir(junaArray);
 
 
-        document.getElementById("junalista").innerHTML ="";
+        //document.getElementById("junalista").innerHTML ="";
 
             //luodaan muuttujat (junantyyppi, pvm yms.)
             var tunnus = taulu.trainType + taulu.trainNumber;
@@ -101,7 +98,7 @@ function tilavaihtu() {
             var pvm = taulu.departureDate;
 
 
-
+            // tulostetaam tiedot tauluun
             lista.innerHTML = tunnus;
 
             //luodaan td-elementtejä ja lisätään ne luotuun tr-elementtiin
@@ -117,7 +114,7 @@ function tilavaihtu() {
             paiva.innerHTML = pvm;
             lista.appendChild(paiva);
 
-            //hakee id perusteella html tiedostosta
+            //hakee id perusteella html tiedostosta ja yhdistää haetut tiedot listaan
             document.getElementById("junalista").appendChild(lista);
 
         }
