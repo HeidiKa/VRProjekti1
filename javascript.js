@@ -239,9 +239,12 @@ function tilavaihtu() {
             var ajat = [];
             for (var j=0;j<taulu[i].timeTableRows.length;j++){
                 asemat.push(taulu[i].timeTableRows[j].stationShortCode);
-                ajat.push(taulu[i].timeTableRows[j].scheduledTime);
+                //ajat.push(taulu[i].timeTableRows[j].scheduledTime);
+                var aika = new Date(taulu[i].timeTableRows[j].scheduledTime).toLocaleTimeString("fi",ajanEsitys);
+                ajat.push(aika);
             }
             console.dir(asemat);
+
 
             var junanTiedot = document.createElement("tr");
             junanTiedot.innerHTML = "<a id=juna" + i + ">" + "" + "</a>";
@@ -255,3 +258,4 @@ function tilavaihtu() {
         }
     }
 }
+
