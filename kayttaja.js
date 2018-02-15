@@ -32,20 +32,3 @@ function tarkista() {
     }
 }
 
-
-
-// document.getElementById("kirjauduPainike").addEventListener("click", nayta());
-/*
- document.addEventListener('click', nayta(), false);
-function nayta(){
-    console.log("toimii");
-    document.getElementById("testi").style.display = 'none';
-}
-
-document.addEventListener("click", function () {
-    document.getElementById("testi").style.display = "none";
-    document.getElementById("omatTiedot").style.display = "none";
-});
-
-*/
-

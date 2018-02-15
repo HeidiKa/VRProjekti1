@@ -110,6 +110,10 @@ Math.radians = function (degrees) {
 }
 
 function lahinAsema() {
+
+
+    document.getElementById("googleMap").style.display = 'block';
+
     for (var i = 0; i < asemienSijainnit.length; i++) {
         var koordinaatit = asemienSijainnit[i].split(";");
         var R = 6371e3;
@@ -274,15 +278,17 @@ function tilavaihtu() {
         // KÄYTTÄÄKÖ ESIASETETTU NYKYAIKAA VAI KÄYTTÄJÄN KRIJOTITAMAA MYÖHÄISEMPÄÄ AIKAA
         if (document.getElementById("kellonaika").value > nykyaika) {
             lahtoaikaSplit = document.getElementById("kellonaika").value.split(":");
+            console.log("isompi");
         } else {
             lahtoaikaSplit = nykyaika.split(":");
+            console.log("pienempi");
         }
 
         console.log(lahtoaikaSplit);
 
 
         for (var i = 0; i < jsonData.length; i++) {
-            lahtoaikaSplit = nykyaika.split(":");
+           // lahtoaikaSplit = nykyaika.split(":");
             aika = new Date(jsonData[i].timeTableRows[0].scheduledTime).toLocaleTimeString().split(":");
             //console.log(lahtoaikaSplit[0] < aika[0]);
 
@@ -290,19 +296,20 @@ function tilavaihtu() {
                 taulu.push(jsonData[i]);
             }
         }
-        document.getElementById("hakutulokset").innerHTML = "Hakutulokset";
+
         document.getElementById("junatunnus").innerHTML = "Junatunnus";
         document.getElementById("lahtoaika").innerHTML = "Lähtöaika";
         document.getElementById("saapumisaika").innerHTML = "Saapumisaika";
         // Tyhjentää hakutulokset ennen uutta hakua
-        while (taulunsisalto.hasChildNodes()) {
-            taulunsisalto.removeChild(taulunsisalto.firstChild());
+        while (taulunsisalto.firstChild) {
+            taulunsisalto.removeChild(taulunsisalto.firstChild);
         }
         for (var i = 0; i < taulu.length; i++) {
 
             //luodaan tr-elementti ja lisätään sille onclick ominaisuus, mikä piilottaa junan tiedot
             var lista = document.createElement("tr");
             lista.setAttribute("id", i + "sarake");
+
             lista.setAttribute("onclick", "piilota(event)");
 
             //luodaan muuttujat (junantyyppi, pvm yms.)
@@ -326,7 +333,7 @@ function tilavaihtu() {
 
             //hakee id perusteella html tiedostosta ja yhdistää haetut tiedot listaan
             taulunsisalto.appendChild(lista);
-            junalista.appendChild(lista);
+
 
             var asemat = [];
             var ajat = [];
@@ -340,7 +347,7 @@ function tilavaihtu() {
             var junanTiedot = document.createElement("tr");
             junanTiedot.setAttribute("style", "display: none");
             junanTiedot.innerHTML = "<a id=juna" + i + ">" + "" + "</a>";
-            junalista.appendChild(junanTiedot);
+            taulunsisalto.appendChild(junanTiedot);
 
             for (var k = 0; k < asemat.length; k += 2) {
                 junanTiedot.innerHTML += asemat[k] + " " + ajat[k] + "<br>";
