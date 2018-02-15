@@ -1,3 +1,7 @@
+
+//PAIKANNETAAN OMA SIJAINTI HETI SIVULLE PÄÄSTÄESSÄ (ALEKSI)
+paikanna();
+
 //ASETETAAN SIVULLE TULTAESSA NYKYINEN PÄIVÄMÄÄRÄ JA AIKA NIILLE KUULUVIIN KENTTIIN (ALEKSI JA HEIDI)
 var nykyaika;
 
@@ -35,7 +39,6 @@ function asetaAikaJaPaivamaara() {
 
     document.getElementById("paivamaara").value = paivamaara;
 }
-
 asetaAikaJaPaivamaara();
 
 // ALEKSI JA VELLU ----
@@ -50,7 +53,6 @@ var asematHaettu;
 function asematiedot() {
     xhr1.open("GET", "https://rata.digitraffic.fi/api/v1/metadata/stations");
     xhr1.send(null);
-
 }
 
 // Funktio hakee asemien tiedot muuttujaksi
@@ -62,11 +64,76 @@ if (asematHaettu == null) {
 }
 
 xhr1.onreadystatechange = tilavaihtu1;
+var asemienSijainnit = [];
 
 function tilavaihtu1() {
     if (xhr1.readyState == 4) {
         jsonAsemat = xhr1.responseText;
         asemaArray = JSON.parse(jsonAsemat);
+
+        //console.dir(asemaArray);
+        for (var i = 0; i < asemaArray.length; i++){
+            asemienSijainnit.push(asemaArray[i].latitude + ";" + asemaArray[i].longitude);
+        }
+        console.dir(asemienSijainnit);
+    }
+}
+
+// SEURAAVASSA PÄTKÄSSÄ SUORITETAAN PAIKANNA FUNKTIO JA ASETETAAN LAT JA LON (ALEKSI)
+var lyhinEtaisyys = 1000000;
+var lyhinEtaisuusLat;
+var lyhinEtaisyysLon;
+var lat1;
+var lon1;
+
+function paikanna() {
+    navigator.geolocation.getCurrentPosition(success, failure, {enableHighAccuracy:true});
+}
+
+function success(data) {
+    lat1 = data.coords.latitude;
+    lon1 = data.coords.longitude;
+    console.dir(lat1);
+    console.dir(lon1);
+}
+
+function failure(error) {
+    console.dir(error);
+}
+
+//lASKETAAN LÄHIN ASEMA, KUN KÄYTTÄJÄ PAINAA BUTTONIA LÄHIN ASEMA. LÄHIN ASEMA
+// SIJOITETAAN AUTOMAATTISESTI LÄHTÖPAIKKA KENTTÄÄN (ALEKSI)
+Math.radians = function (degrees) {
+    return degrees * Math.PI / 180;
+}
+
+function lahinAsema() {
+    for (var i = 0; i < asemienSijainnit.length; i++) {
+        var koordinaatit = asemienSijainnit[i].split(";");
+        var R = 6371e3;
+        var lat2 = koordinaatit[0];
+        var lon2 = koordinaatit[1];
+        var radLat1 = Math.radians(lat1);
+        var radLat2 = Math.radians(lat2);
+        var deltaLat = Math.radians(lat2 - lat1);
+        var deltaLon = Math.radians(lon2 - lon1);
+
+        var a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) + Math.cos(radLat1) * Math.cos(radLat2) *
+            Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c;
+
+        if (d < lyhinEtaisyys) {
+            lyhinEtaisyys = d;
+            console.dir(d)
+            lyhinEtaisuusLat = koordinaatit[0];
+            lyhinEtaisyysLon = koordinaatit[1];
+        }
+    }
+    for (var i = 0; i < asemaArray.length; i++){
+        if (asemaArray[i].latitude == lyhinEtaisuusLat && asemaArray[i].longitude == lyhinEtaisyysLon) {
+            document.getElementById("mista").value = asemaArray[i].stationName;
+        }
     }
 }
 
@@ -197,12 +264,12 @@ function tilavaihtu() {
             aika = new Date(jsonData[i].timeTableRows[0].scheduledTime).toLocaleTimeString().split(":");
             //console.log(lahtoaikaSplit[0] < aika[0]);
 
-            if (lahtoaikaSplit[0] < aika[0] || (lahtoaikaSplit[0]==aika[0] && lahtoaikaSplit[1]<aika[1])) {
+            if (lahtoaikaSplit[0] < aika[0] || (lahtoaikaSplit[0] == aika[0] && lahtoaikaSplit[1] < aika[1])) {
                 taulu.push(jsonData[i]);
             }
         }
 
-        for (var i = 0; i < taulu.length; i++){
+        for (var i = 0; i < taulu.length; i++) {
             document.getElementById("hakutulokset").innerHTML = "Hakutulokset";
             document.getElementById("junatunnus").innerHTML = "Junatunnus";
             document.getElementById("lahtoaika").innerHTML = "Lähtöaika";
@@ -237,14 +304,13 @@ function tilavaihtu() {
 
             var asemat = [];
             var ajat = [];
-            for (var j=0;j<taulu[i].timeTableRows.length;j++){
+            for (var j = 0; j < taulu[i].timeTableRows.length; j++) {
                 asemat.push(taulu[i].timeTableRows[j].stationShortCode);
                 //ajat.push(taulu[i].timeTableRows[j].scheduledTime);
                 var aika = new Date(taulu[i].timeTableRows[j].scheduledTime).toLocaleTimeString("fi",ajanEsitys);
                 ajat.push(aika);
             }
             console.dir(asemat);
-
 
             var junanTiedot = document.createElement("tr");
             junanTiedot.innerHTML = "<a id=juna" + i + ">" + "" + "</a>";
@@ -254,7 +320,7 @@ function tilavaihtu() {
                 junanTiedot.innerHTML += asemat[k] + " " + ajat[k] + "<br>";
                 //junanTiedot.append("<br>");
             }
-            junanTiedot.innerHTML += asemat[asemat.length-1] + " " + ajat[ajat.length-1] + "<br>";
+            junanTiedot.innerHTML += asemat[asemat.length - 1] + " " + ajat[ajat.length - 1] + "<br>";
         }
     }
 }
