@@ -1,3 +1,5 @@
+
+
 //PAIKANNETAAN OMA SIJAINTI HETI SIVULLE PÄÄSTÄESSÄ (ALEKSI)
 paikanna();
 
@@ -6,6 +8,7 @@ var nykyaika;
 
 function asetaAikaJaPaivamaara() {
     var aika = new Date();
+    //var asetaAika = aika.setHours() + aika.setMinutes();
 
     if (aika.getHours() < 10) {
         if (aika.getMinutes() === 00) {
@@ -38,7 +41,6 @@ function asetaAikaJaPaivamaara() {
 
     document.getElementById("paivamaara").value = paivamaara;
 }
-
 asetaAikaJaPaivamaara();
 
 // ALEKSI JA VELLU ----
@@ -72,7 +74,7 @@ function tilavaihtu1() {
         asemaArray = JSON.parse(jsonAsemat);
 
         //console.dir(asemaArray);
-        for (var i = 0; i < asemaArray.length; i++) {
+        for (var i = 0; i < asemaArray.length; i++){
             asemienSijainnit.push(asemaArray[i].latitude + ";" + asemaArray[i].longitude);
         }
         console.dir(asemienSijainnit);
@@ -87,7 +89,7 @@ var lat1;
 var lon1;
 
 function paikanna() {
-    navigator.geolocation.getCurrentPosition(success, failure, {enableHighAccuracy: true});
+    navigator.geolocation.getCurrentPosition(success, failure, {enableHighAccuracy:true});
 }
 
 function success(data) {
@@ -130,11 +132,17 @@ function lahinAsema() {
             lyhinEtaisyysLon = koordinaatit[1];
         }
     }
-    for (var i = 0; i < asemaArray.length; i++) {
+    for (var i = 0; i < asemaArray.length; i++){
         if (asemaArray[i].latitude == lyhinEtaisuusLat && asemaArray[i].longitude == lyhinEtaisyysLon) {
             document.getElementById("mista").value = asemaArray[i].stationName;
         }
-    }
+    }kartta();
+
+//LÄHIMMÄN ASEMAN SIJAINTI KARTALLA (ALEKSI)
+}
+function kartta() {
+    var mapProp = {center:new google.maps.LatLng(lyhinEtaisuusLat,lyhinEtaisyysLon), zoom:15};
+    var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 }
 
 //--------------- JUNA-AIKATAULUJEN HAKEMINEN KÄYTTÄJÄN HAUN PERUSTEELLA -------------
@@ -166,7 +174,6 @@ function hae() {
         if (document.getElementById("mista").value.toUpperCase() == asemaArray[i].stationName.toUpperCase()) {
             lahtopaikka = asemaArray[i].stationShortCode;
         }
-
     }
 
     // TULOSTAA VIRHEILMOITUKSEN JOS ASEMAA EI LÖYDU TAI LÖYTYY USEITA VAIHTOEHTOJA
@@ -253,64 +260,50 @@ function kaytaSuosikkiReittia() {
 // JOHANNA JA HEIDI -----------------------------------
 // HEATUN REITTITIEDON TULOSTAMINEN SIVULLE
 
-
 function tilavaihtu() {
-    // document.getElementById("hakutulos").innerHTML ="";
-
+    var taulunsisalto = document.getElementById("taulunsisalto");
     if (xhr.readyState === 4) {
         var jsonData = JSON.parse(xhr.responseText);
         var taulu = [];
         var aika;
         var lista = [];
 
-        document.getElementById("tallennaSuosikkiReitti").style.display = 'block' // Asettaa suosikkireitin tallennusnapin näkyväksi kun on tehty eka haku
 
+        document.getElementById("tallennaSuosikkiReitti").style.display = 'block' // Asettaa suosikkireitin tallennusnapin näkyväksi kun on tehty eka haku
 
         // KÄYTTÄÄKÖ ESIASETETTU NYKYAIKAA VAI KÄYTTÄJÄN KRIJOTITAMAA MYÖHÄISEMPÄÄ AIKAA
         if (document.getElementById("kellonaika").value > nykyaika) {
-
-            //console.log("ISOMPI!")
-            // console.log(document.getElementById("kellonaika").value);
-            // console.log(document.getElementById("kellonaika").value);
-
-            //console.log(document.getElementById("kellonaika").value.substring(2,3));
-            // document.getElementById("kellonaika").value.substring(2,3) = ",";
-
             lahtoaikaSplit = document.getElementById("kellonaika").value.split(":");
-
-
         } else {
-
-           // console.log("PIEMENPI!")
             lahtoaikaSplit = nykyaika.split(":");
-            //console.log(lahtoaikaSplit);
-
         }
 
         console.log(lahtoaikaSplit);
-        console.log("Tätä käytetään" + lahtoaikaSplit);
+
 
         for (var i = 0; i < jsonData.length; i++) {
-
+            lahtoaikaSplit = nykyaika.split(":");
             aika = new Date(jsonData[i].timeTableRows[0].scheduledTime).toLocaleTimeString().split(":");
             //console.log(lahtoaikaSplit[0] < aika[0]);
 
             if (lahtoaikaSplit[0] < aika[0] || (lahtoaikaSplit[0] == aika[0] && lahtoaikaSplit[1] < aika[1])) {
                 taulu.push(jsonData[i]);
-                //  console.log(jsonData[i]);
             }
         }
-
+        document.getElementById("hakutulokset").innerHTML = "Hakutulokset";
+        document.getElementById("junatunnus").innerHTML = "Junatunnus";
+        document.getElementById("lahtoaika").innerHTML = "Lähtöaika";
+        document.getElementById("saapumisaika").innerHTML = "Saapumisaika";
+        // Tyhjentää hakutulokset ennen uutta hakua
+        while (taulunsisalto.hasChildNodes()) {
+            taulunsisalto.removeChild(taulunsisalto.firstChild());
+        }
         for (var i = 0; i < taulu.length; i++) {
-            document.getElementById("hakutulokset").innerHTML = "Hakutulokset";
-            document.getElementById("junatunnus").innerHTML = "Junatunnus";
-            document.getElementById("lahtoaika").innerHTML = "Lähtöaika";
-            document.getElementById("saapumisaika").innerHTML = "Saapumisaika";
 
-            //luodaan tr-elementti
+            //luodaan tr-elementti ja lisätään sille onclick ominaisuus, mikä piilottaa junan tiedot
             var lista = document.createElement("tr");
             lista.setAttribute("id", i + "sarake");
-
+            lista.setAttribute("onclick", "piilota(event)");
 
             //luodaan muuttujat (junantyyppi, pvm yms.)
             var tunnus = taulu[i].trainType + taulu[i].trainNumber;
@@ -319,7 +312,7 @@ function tilavaihtu() {
             var saapumisAika = new Date(taulu[i].timeTableRows[taulu[i].timeTableRows.length - 1].scheduledTime).toLocaleTimeString("fi", ajanEsitys);
 
             // tulostetaam tiedot tauluun
-            lista.innerHTML = "<a href=" + "#juna" + i + ">" + tunnus + "</a>";
+            lista.innerHTML = "" + tunnus;
             //console.log("https://rata.digitraffic.fi/trains/" + taulu[i].trainNumber);
 
             //luodaan td-elementtejä ja lisätään ne luotuun tr-elementtiin
@@ -332,19 +325,20 @@ function tilavaihtu() {
             lista.appendChild(saapuu);
 
             //hakee id perusteella html tiedostosta ja yhdistää haetut tiedot listaan
+            taulunsisalto.appendChild(lista);
             junalista.appendChild(lista);
 
             var asemat = [];
             var ajat = [];
             for (var j = 0; j < taulu[i].timeTableRows.length; j++) {
                 asemat.push(taulu[i].timeTableRows[j].stationShortCode);
-                //ajat.push(taulu[i].timeTableRows[j].scheduledTime);
                 var aika = new Date(taulu[i].timeTableRows[j].scheduledTime).toLocaleTimeString("fi", ajanEsitys);
                 ajat.push(aika);
             }
             console.dir(asemat);
 
             var junanTiedot = document.createElement("tr");
+            junanTiedot.setAttribute("style", "display: none");
             junanTiedot.innerHTML = "<a id=juna" + i + ">" + "" + "</a>";
             junalista.appendChild(junanTiedot);
 
@@ -354,6 +348,18 @@ function tilavaihtu() {
             }
             junanTiedot.innerHTML += asemat[asemat.length - 1] + " " + ajat[ajat.length - 1] + "<br>";
         }
+
+    }
+}
+//PIILOTA FUNKTIO, JOKA PIILOTTAA MÄÄRITELTYÄ TAVARAA FUNKTION TOTEUTUKSEN JÄLKEEN
+function piilota(event) {
+    var listaelem = event.target;
+    var trelem = listaelem.nextElementSibling;
+
+    if (trelem.style.display === "none") {
+        trelem.style.display = "block";
+    } else {
+        trelem.style.display = "none";
     }
 }
 
