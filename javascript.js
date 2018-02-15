@@ -7,6 +7,7 @@ var nykyaika;
 
 function asetaAikaJaPaivamaara() {
     var aika = new Date();
+    //var asetaAika = aika.setHours() + aika.setMinutes();
 
     if (aika.getHours() < 10) {
         if (aika.getMinutes() === 00) {
@@ -166,7 +167,6 @@ function hae() {
         if (document.getElementById("mista").value.toUpperCase() == asemaArray[i].stationName.toUpperCase()) {
             lahtopaikka = asemaArray[i].stationShortCode;
         }
-
     }
 
     // TULOSTAA VIRHEILMOITUKSEN JOS ASEMAA EI LÖYDU TAI LÖYTYY USEITA VAIHTOEHTOJA
@@ -249,10 +249,8 @@ function kaytaSuosikkiReittia() {
 // JOHANNA JA HEIDI -----------------------------------
 // HEATUN REITTITIEDON TULOSTAMINEN SIVULLE
 
-
 function tilavaihtu() {
-    // document.getElementById("hakutulos").innerHTML ="";
-
+    var taulunsisalto = document.getElementById("taulunsisalto");
     if (xhr.readyState === 4) {
         var jsonData = JSON.parse(xhr.responseText);
         var taulu = [];
@@ -268,17 +266,19 @@ function tilavaihtu() {
                 taulu.push(jsonData[i]);
             }
         }
-
+        document.getElementById("hakutulokset").innerHTML = "Hakutulokset";
+        document.getElementById("junatunnus").innerHTML = "Junatunnus";
+        document.getElementById("lahtoaika").innerHTML = "Lähtöaika";
+        document.getElementById("saapumisaika").innerHTML = "Saapumisaika";
+        // Tyhjentää hakutulokset ennen uutta hakua
+        while (taulunsisalto.hasChildNodes()) {
+            taulunsisalto.removeChild(taulunsisalto.firstChild());
+        }
         for (var i = 0; i < taulu.length; i++) {
-            document.getElementById("hakutulokset").innerHTML = "Hakutulokset";
-            document.getElementById("junatunnus").innerHTML = "Junatunnus";
-            document.getElementById("lahtoaika").innerHTML = "Lähtöaika";
-            document.getElementById("saapumisaika").innerHTML = "Saapumisaika";
 
             //luodaan tr-elementti
             var lista = document.createElement("tr");
             lista.setAttribute("id", i + "sarake");
-
 
             //luodaan muuttujat (junantyyppi, pvm yms.)
             var tunnus = taulu[i].trainType + taulu[i].trainNumber;
@@ -300,14 +300,14 @@ function tilavaihtu() {
             lista.appendChild(saapuu);
 
             //hakee id perusteella html tiedostosta ja yhdistää haetut tiedot listaan
+            taulunsisalto.appendChild(lista);
             junalista.appendChild(lista);
 
             var asemat = [];
             var ajat = [];
             for (var j = 0; j < taulu[i].timeTableRows.length; j++) {
                 asemat.push(taulu[i].timeTableRows[j].stationShortCode);
-                //ajat.push(taulu[i].timeTableRows[j].scheduledTime);
-                var aika = new Date(taulu[i].timeTableRows[j].scheduledTime).toLocaleTimeString("fi",ajanEsitys);
+                var aika = new Date(taulu[i].timeTableRows[j].scheduledTime).toLocaleTimeString("fi", ajanEsitys);
                 ajat.push(aika);
             }
             console.dir(asemat);
@@ -322,6 +322,6 @@ function tilavaihtu() {
             }
             junanTiedot.innerHTML += asemat[asemat.length - 1] + " " + ajat[ajat.length - 1] + "<br>";
         }
+
     }
 }
-
