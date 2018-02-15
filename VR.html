@@ -1,11 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>$Title$</title>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
-    <script src="javascript.js" async></script>
-    <script src="kayttaja.js"></script>
+
+    <script src="javascript.js" async>
+    </script>
+    <script src="kayttaja.js">
+    </script>
     <style>
         #junalista {
             padding: 1px;
@@ -27,10 +31,10 @@
 
     <div id="lomake">
         <!-- Kannattaako olla formissa? -->
-        <input type="text" id="mista" placeholder="Mistä lähdet">
+        <input type="text" id="mista" placeholder="Mistä lähdet"> </br>
         <div id="googleMap" style="width:400px;height:400px"></div>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOXw7DlRIF7dQBe4iEoot7d6l0cIQzX98&callback=myMap"></script>
-        <br><input type="text" id="minne" placeholder="Mihin matkustat"> </br>
+        <input type="text" id="minne" placeholder="Mihin matkustat"> </br>
         <input type="date" id="paivamaara"> </br> <!-- esitäyttö? -->
         <input type="time" id="kellonaika"> </br> <!-- esitäyttö? -->
         <button id="hae" onclick="hae()">Hae</button>
@@ -72,7 +76,6 @@
 <button id="tallennaSuosikkiReitti" onclick="tallennaSuosikkiReittiFunktio()">Tallenna reitti suosikiksi</button>
 
 
-
 <!-- JOHANNA JA VELLU-->
 
 <hr>
@@ -87,7 +90,7 @@
         <th id="junatunnus"></th>
         <th id="lahtoaika"></th>
         <th id="saapumisaika"></th>
-
+        <tbody id="taulunsisalto"></tbody>
     </table>
 
 
