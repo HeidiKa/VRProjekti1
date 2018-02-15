@@ -1,0 +1,50 @@
+/*JOHANNAN STAILAUKSIA*/
+
+body{
+    background-color: green;
+    text-align: center;
+    color: white;
+
+}
+
+#aikatauluhaku,#lomake,#luoTunnus,#kirjaudu,#omatTiedot{
+    border-width: 5px 5px 5px 5px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 30px/10px;
+    background-color: yellowgreen;
+    margin-top: 0.1%;
+    margin-bottom: 0.1%;
+    margin-right: 30%;
+    margin-left: 30%;
+}
+
+#lomake{
+    align-content: left;
+}
+
+hr{
+    color: white;
+    height: 5px;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    background-color: yellowgreen;
+}
+
+#suosikkiNappi,#tallennaSuosikkiReitti{
+    margin: 0 auto;
+
+}
+
+#junalista {
+    padding: 1px;
+    border-spacing: 20px;
+}
+
+tr {
+    padding: 50px;
+    text-align: left;
+
+}
