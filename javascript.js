@@ -17,7 +17,7 @@ function asetaAikaJaPaivamaara() {
     } else {
         nykyaika = aika.getHours();
     }
-    console.dir(nykyaika);
+
     if (aika.getMinutes() < 10) {
         if (aika.getMinutes() === 00) {
             nykyaika += ":00"
@@ -27,7 +27,6 @@ function asetaAikaJaPaivamaara() {
     } else {
         nykyaika += ":" + aika.getMinutes();
     }
-    console.dir(nykyaika);
 
     document.getElementById("kellonaika").value = nykyaika;
 
@@ -70,12 +69,10 @@ function tilavaihtu1() {
     if (xhr1.readyState == 4) {
         jsonAsemat = xhr1.responseText;
         asemaArray = JSON.parse(jsonAsemat);
-<<<<<<< HEAD
         //console.dir(asemaArray);
         for (var i = 0; i < asemaArray.length; i++){
             asemienSijainnit.push(asemaArray[i].latitude + ";" + asemaArray[i].longitude);
         }
-        console.dir(asemienSijainnit);
     }
 }
 
@@ -93,8 +90,6 @@ function paikanna() {
 function success(data) {
     lat1 = data.coords.latitude;
     lon1 = data.coords.longitude;
-    console.dir(lat1);
-    console.dir(lon1);
 }
 
 function failure(error) {
@@ -125,7 +120,6 @@ function lahinAsema() {
 
         if (d < lyhinEtaisyys) {
             lyhinEtaisyys = d;
-            console.dir(d)
             lyhinEtaisuusLat = koordinaatit[0];
             lyhinEtaisyysLon = koordinaatit[1];
         }
@@ -134,9 +128,14 @@ function lahinAsema() {
         if (asemaArray[i].latitude == lyhinEtaisuusLat && asemaArray[i].longitude == lyhinEtaisyysLon) {
             document.getElementById("mista").value = asemaArray[i].stationName;
         }
-=======
->>>>>>> 90d521e7dc1cb6726279a773f6b72de8045e14a1
     }
+    kartta();
+
+//LÄHIMMÄN ASEMAN SIJAINTI KARTALLA (ALEKSI)
+}
+function kartta() {
+    var mapProp = {center:new google.maps.LatLng(lyhinEtaisuusLat,lyhinEtaisyysLon), zoom:15};
+    var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 }
 
 //--------------- JUNA-AIKATAULUJEN HAKEMINEN KÄYTTÄJÄN HAUN PERUSTEELLA -------------
@@ -277,9 +276,10 @@ function tilavaihtu() {
             document.getElementById("lahtoaika").innerHTML = "Lähtöaika";
             document.getElementById("saapumisaika").innerHTML = "Saapumisaika";
 
-            //luodaan tr-elementti
+            //luodaan tr-elementti ja lisätään sille onclick ominaisuus, mikä piilottaa junan tiedot
             var lista = document.createElement("tr");
             lista.setAttribute("id", i + "sarake");
+            lista.setAttribute("onclick", "piilota(event)");
 
 
             //luodaan muuttujat (junantyyppi, pvm yms.)
@@ -289,7 +289,7 @@ function tilavaihtu() {
             var saapumisAika = new Date(taulu[i].timeTableRows[taulu[i].timeTableRows.length - 1].scheduledTime).toLocaleTimeString("fi", ajanEsitys);
 
             // tulostetaam tiedot tauluun
-            lista.innerHTML = "<a href=" + "#juna" + i + ">" + tunnus + "</a>";
+            lista.innerHTML = "" + tunnus;
             //console.log("https://rata.digitraffic.fi/trains/" + taulu[i].trainNumber);
 
             //luodaan td-elementtejä ja lisätään ne luotuun tr-elementtiin
@@ -313,6 +313,7 @@ function tilavaihtu() {
             console.dir(asemat);
 
             var junanTiedot = document.createElement("tr");
+            junanTiedot.setAttribute("style", "display: none");
             junanTiedot.innerHTML = "<a id=juna" + i + ">" + "" + "</a>";
             junalista.appendChild(junanTiedot);
 
@@ -322,6 +323,18 @@ function tilavaihtu() {
             }
             junanTiedot.innerHTML += asemat[asemat.length - 1] + " " + ajat[ajat.length - 1] + "<br>";
         }
+    }
+}
+
+//PIILOTA FUNKTIO, JOKA PIILOTTAA MÄÄRITELTYÄ TAVARAA FUNKTION TOTEUTUKSEN JÄLKEEN
+function piilota(event) {
+    var listaelem = event.target;
+    var trelem = listaelem.nextElementSibling;
+
+    if (trelem.style.display === "none") {
+        trelem.style.display = "block";
+    } else {
+        trelem.style.display = "none";
     }
 }
 
