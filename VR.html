@@ -50,7 +50,7 @@
 
         <div id="omatTiedot">
             <h2>Omat tiedot</h2>
-            Suosikkiasema: TÄHÄN KOTIASEMA </br>
+            Kirjautuneena: <span id="kirjautuneena"></span> </br>
             Suosikkireitti: <span id="suosikkiReitti"></span>
         </div>
     </div>
@@ -67,7 +67,7 @@
 </div>
 
 <!-- Luodaan napit suosikkireitin tallentamista ja valintaa varten-->
-<button id="suosikkiNappi" onclick="kaytaSuosikkiReittia()">Valitse suosikkireitti</button>
+<button id="suosikkiNappi" onclick="kaytaSuosikkiReittia()">Käytä suosikkireittiä</button>
 <br>
 <br>
 <button id="tallennaSuosikkiReitti" onclick="tallennaSuosikkiReittiFunktio()">Tallenna reitti suosikiksi</button>
@@ -103,7 +103,16 @@
         document.getElementById("omatTiedot").style.display = 'block';
         document.getElementById("kirjauduLinkki").style.display = 'none';
         document.getElementById("suosikkiNappi").style.display = 'block';
-        document.getElementById("tallennaSuosikkiReitti").style.display = 'block';
+
+        // JOS HAKUTULOKSIA EI OLE, NIIN PIILOTA SUOSIKKIREITIN TALLENNUSNAPPI
+        if (document.getElementById("hakutulokset").innerHTML == "") {
+            // ei näy
+            document.getElementById("tallennaSuosikkiReitti").style.display = 'none'; // Näkyy vasta kun on tehnyt reittihaun. Siksi ei käytössä tässä.
+        } else {
+            // näkyy
+            document.getElementById("tallennaSuosikkiReitti").style.display = 'block'; // Näkyy vasta kun on tehnyt reittihaun. Siksi ei käytössä tässä.
+        }
+
     } else {
         document.getElementById("omatTiedot").style.display = 'none';
         document.getElementById("kirjauduLinkki").style.display = 'block';
@@ -117,10 +126,21 @@
     function paivitaSuosikkiasemat() {
         var tallennettuLahtoasema = localStorage.getItem("suosikkiLahtoAsema");
         var tallennettuKohdeasema = localStorage.getItem("suosikkiKohdeAsema");
+        var tallennettuKayttaja = localStorage.getItem("nimi");
 
-        document.getElementById("suosikkiReitti").innerHTML = "" + tallennettuLahtoasema + "-" + tallennettuKohdeasema;
+        // Tulostaa kirjautuneen käyttäjän nimen
+        document.getElementById("kirjautuneena").innerHTML = "" + tallennettuKayttaja;
+
+        //Tulostaa suosikkiaseman. Jos asemaa ei ole asetettu, niin antaa ohjeen miten aseman saaa valittua
+        if (tallennettuLahtoasema == null) {
+            document.getElementById("suosikkiReitti").innerHTML = "Tee reittihaku ja tallenna suosikkireittisi!";
+        } else {
+            document.getElementById("suosikkiReitti").innerHTML = "" + tallennettuLahtoasema + "-" + tallennettuKohdeasema;
+        }
+
     }
 
+    // päivittää suosikkiasema-tiedot jotka tulostuvat sivulle
     paivitaSuosikkiasemat();
 
 </script>

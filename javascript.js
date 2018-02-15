@@ -1,4 +1,3 @@
-
 //PAIKANNETAAN OMA SIJAINTI HETI SIVULLE PÄÄSTÄESSÄ (ALEKSI)
 paikanna();
 
@@ -39,6 +38,7 @@ function asetaAikaJaPaivamaara() {
 
     document.getElementById("paivamaara").value = paivamaara;
 }
+
 asetaAikaJaPaivamaara();
 
 // ALEKSI JA VELLU ----
@@ -72,7 +72,7 @@ function tilavaihtu1() {
         asemaArray = JSON.parse(jsonAsemat);
 
         //console.dir(asemaArray);
-        for (var i = 0; i < asemaArray.length; i++){
+        for (var i = 0; i < asemaArray.length; i++) {
             asemienSijainnit.push(asemaArray[i].latitude + ";" + asemaArray[i].longitude);
         }
         console.dir(asemienSijainnit);
@@ -87,7 +87,7 @@ var lat1;
 var lon1;
 
 function paikanna() {
-    navigator.geolocation.getCurrentPosition(success, failure, {enableHighAccuracy:true});
+    navigator.geolocation.getCurrentPosition(success, failure, {enableHighAccuracy: true});
 }
 
 function success(data) {
@@ -130,7 +130,7 @@ function lahinAsema() {
             lyhinEtaisyysLon = koordinaatit[1];
         }
     }
-    for (var i = 0; i < asemaArray.length; i++){
+    for (var i = 0; i < asemaArray.length; i++) {
         if (asemaArray[i].latitude == lyhinEtaisuusLat && asemaArray[i].longitude == lyhinEtaisyysLon) {
             document.getElementById("mista").value = asemaArray[i].stationName;
         }
@@ -172,9 +172,11 @@ function hae() {
     // TULOSTAA VIRHEILMOITUKSEN JOS ASEMAA EI LÖYDU TAI LÖYTYY USEITA VAIHTOEHTOJA
     if (hakuaVastaavatLahtoAsemat.length > 1) {
         alert("Kirjoita tarkempi lähtöasematieto seuraavista vaihtoehdoista: " + hakuaVastaavatLahtoAsemat);
+        return;
     }
     if (hakuaVastaavatLahtoAsemat.length == 0) {
         alert("Kirjoittamaasi lähtöasemaa eikä vastaavia löytynyt");
+        return;
     }
 
 
@@ -196,9 +198,11 @@ function hae() {
     // TULOSTAA VIRHEILMOITUKSEN JOS ASEMAA EI LÖYDU TAI LÖYTYY USEITA VAIHTOEHTOJA
     if (hakuaVastaavatSaapumisasemat.length > 1) {
         alert("Kirjoita tarkempi saapumisasematieto seuraavista vaihtoehdoista: " + hakuaVastaavatSaapumisasemat);
+        return;
     }
     if (hakuaVastaavatSaapumisasemat.length == 0) {
         alert("Kirjoittamaasi saapumisasemaa eikä vastaavia löytynyt");
+        return;
     }
 
 
@@ -259,13 +263,41 @@ function tilavaihtu() {
         var aika;
         var lista = [];
 
-        for (var i = 0; i < jsonData.length; i++) {
+        document.getElementById("tallennaSuosikkiReitti").style.display = 'block' // Asettaa suosikkireitin tallennusnapin näkyväksi kun on tehty eka haku
+
+
+        // KÄYTTÄÄKÖ ESIASETETTU NYKYAIKAA VAI KÄYTTÄJÄN KRIJOTITAMAA MYÖHÄISEMPÄÄ AIKAA
+        if (document.getElementById("kellonaika").value > nykyaika) {
+
+            //console.log("ISOMPI!")
+            // console.log(document.getElementById("kellonaika").value);
+            // console.log(document.getElementById("kellonaika").value);
+
+            //console.log(document.getElementById("kellonaika").value.substring(2,3));
+            // document.getElementById("kellonaika").value.substring(2,3) = ",";
+
+            lahtoaikaSplit = document.getElementById("kellonaika").value.split(":");
+
+
+        } else {
+
+           // console.log("PIEMENPI!")
             lahtoaikaSplit = nykyaika.split(":");
+            //console.log(lahtoaikaSplit);
+
+        }
+
+        console.log(lahtoaikaSplit);
+        console.log("Tätä käytetään" + lahtoaikaSplit);
+
+        for (var i = 0; i < jsonData.length; i++) {
+
             aika = new Date(jsonData[i].timeTableRows[0].scheduledTime).toLocaleTimeString().split(":");
             //console.log(lahtoaikaSplit[0] < aika[0]);
 
             if (lahtoaikaSplit[0] < aika[0] || (lahtoaikaSplit[0] == aika[0] && lahtoaikaSplit[1] < aika[1])) {
                 taulu.push(jsonData[i]);
+                //  console.log(jsonData[i]);
             }
         }
 
@@ -307,7 +339,7 @@ function tilavaihtu() {
             for (var j = 0; j < taulu[i].timeTableRows.length; j++) {
                 asemat.push(taulu[i].timeTableRows[j].stationShortCode);
                 //ajat.push(taulu[i].timeTableRows[j].scheduledTime);
-                var aika = new Date(taulu[i].timeTableRows[j].scheduledTime).toLocaleTimeString("fi",ajanEsitys);
+                var aika = new Date(taulu[i].timeTableRows[j].scheduledTime).toLocaleTimeString("fi", ajanEsitys);
                 ajat.push(aika);
             }
             console.dir(asemat);
