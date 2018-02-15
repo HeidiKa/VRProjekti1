@@ -48,6 +48,7 @@ asetaAikaJaPaivamaara();
 
 var asemaArray;
 var xhr1 = new XMLHttpRequest();
+var asematHaettu;
 
 function asematiedot() {
     xhr1.open("GET", "https://rata.digitraffic.fi/api/v1/metadata/stations");
@@ -56,7 +57,11 @@ function asematiedot() {
 
 // Funktio hakee asemien tiedot muuttujaksi
 // Käytetään asemien nimien lyhytkoodien hakemiseen käyttäjän haun perusteella
-asematiedot();
+
+if (asematHaettu == null) {
+    asematiedot();
+    asematHaettu = true;
+}
 
 xhr1.onreadystatechange = tilavaihtu1;
 var asemienSijainnit = [];
@@ -65,6 +70,7 @@ function tilavaihtu1() {
     if (xhr1.readyState == 4) {
         jsonAsemat = xhr1.responseText;
         asemaArray = JSON.parse(jsonAsemat);
+<<<<<<< HEAD
         //console.dir(asemaArray);
         for (var i = 0; i < asemaArray.length; i++){
             asemienSijainnit.push(asemaArray[i].latitude + ";" + asemaArray[i].longitude);
@@ -128,6 +134,8 @@ function lahinAsema() {
         if (asemaArray[i].latitude == lyhinEtaisuusLat && asemaArray[i].longitude == lyhinEtaisyysLon) {
             document.getElementById("mista").value = asemaArray[i].stationName;
         }
+=======
+>>>>>>> 90d521e7dc1cb6726279a773f6b72de8045e14a1
     }
 }
 
@@ -143,30 +151,59 @@ function hae() {
     var maaranpaa = "";
     var paivamaara;
     var hakuaVastaavatLahtoAsemat = [];
+    var hakuaVastaavatSaapumisasemat = [];
 
     // Hakee käyttäjän syöttämän lähtöaseman perusteella aseman lyhytkoodin
     for (var i = 0; i < asemaArray.length; i++) {
 
-        // var asemanimi = asemaArray[i].stationName;
-        /*
-                if(document.getElementById("mista").value.toUpperCase() ) { // /* matchaa aseman nimeen jollain tavalla
-                    hakuaVastaavatLahtoAsemat.add(asemaArray[i].stationName);
-                }
-        */
+
+        var asemanimi = asemaArray[i].stationName;
+
+        // ETSII HAKUA VASTAAVAT ASEMAT JA LISTAA NE. esim. Helsinki > Helsinki asema
+        if (asemaArray[i].stationName.toUpperCase().includes(document.getElementById("mista").value.toUpperCase())) { // /* matchaa aseman nimeen jollain tavalla
+            hakuaVastaavatLahtoAsemat.push(asemaArray[i].stationName);
+            //console.log(asemaArray[i].stationName);
+        }
+
         if (document.getElementById("mista").value.toUpperCase() == asemaArray[i].stationName.toUpperCase()) {
             lahtopaikka = asemaArray[i].stationShortCode;
-
-        } else {
-            // tähän vain tulostus
         }
+
     }
+
+    // TULOSTAA VIRHEILMOITUKSEN JOS ASEMAA EI LÖYDU TAI LÖYTYY USEITA VAIHTOEHTOJA
+    if (hakuaVastaavatLahtoAsemat.length > 1) {
+        alert("Kirjoita tarkempi lähtöasematieto seuraavista vaihtoehdoista: " + hakuaVastaavatLahtoAsemat);
+    }
+    if (hakuaVastaavatLahtoAsemat.length == 0) {
+        alert("Kirjoittamaasi lähtöasemaa eikä vastaavia löytynyt");
+    }
+
 
     // Hakee käyttäjän syöttämän saapumisaseman perusteella aseman lyhytkoodin
     for (var i = 0; i < asemaArray.length; i++) {
+
+        // ETSII HAKUA VASTAAVAT ASEMAT JA LISTAA NE. esim. Helsinki > Helsinki asema
+        if (asemaArray[i].stationName.toUpperCase().includes(document.getElementById("minne").value.toUpperCase())) { // /* matchaa aseman nimeen jollain tavalla
+            hakuaVastaavatSaapumisasemat.push(asemaArray[i].stationName);
+        }
+
+        // MÄÄRITTÄÄ URLIIN TULEVAN LYHYEN ASEMAKOODIN
         if (document.getElementById("minne").value.toUpperCase() == asemaArray[i].stationName.toUpperCase()) {
             maaranpaa = asemaArray[i].stationShortCode;
         }
     }
+
+
+    // TULOSTAA VIRHEILMOITUKSEN JOS ASEMAA EI LÖYDU TAI LÖYTYY USEITA VAIHTOEHTOJA
+    if (hakuaVastaavatSaapumisasemat.length > 1) {
+        alert("Kirjoita tarkempi saapumisasematieto seuraavista vaihtoehdoista: " + hakuaVastaavatSaapumisasemat);
+    }
+    if (hakuaVastaavatSaapumisasemat.length == 0) {
+        alert("Kirjoittamaasi saapumisasemaa eikä vastaavia löytynyt");
+    }
+
+
     // paivamaara URLiin haun perusteella
     paivamaara = document.getElementById("paivamaara").value;
 
@@ -176,9 +213,40 @@ function hae() {
         "/" + maaranpaa + "?departure_date=" + paivamaara);
     xhr.send(null);
 
+    // Käytetään suosikkipaikan tallennuksessa
+    suosikkiLahtoPaikka = document.getElementById("mista").value;
+    suosikkiKohdeAsema = document.getElementById("minne").value;
+
+
     // REITTI- JA PÄIVÄMÄÄRÄTIEDOT TULOSTUKSEN ALKUUN (ALEKSI JA HEIDI)
     document.getElementById("reitti").innerHTML = lahtopaikka + "-" + maaranpaa + " " + paivamaara;
 }
+
+/// ---------------- >>>>>>>>>>>>>>
+//  SUOSIKKIREITIN TALLENNUS
+// Johanna ja Vellu
+
+var suosikkiLahtoPaikka;
+var suosikkiKohdeAsema;
+
+function tallennaSuosikkiReittiFunktio() {
+    console.log("toimii");
+    localStorage.setItem("suosikkiLahtoAsema", suosikkiLahtoPaikka);
+    localStorage.setItem("suosikkiKohdeAsema", suosikkiKohdeAsema);
+    paivitaSuosikkiasemat();
+    //  document.getElementById("suosikkiReitti").innerHTML = "" + suosikkiLahtoPaikka + "-" + suosikkiKohdeAsema;
+}
+
+
+function kaytaSuosikkiReittia() {
+    var tallennettuLahtoasema = localStorage.getItem("suosikkiLahtoAsema");
+    var tallennettuKohdeasema = localStorage.getItem("suosikkiKohdeAsema");
+
+    document.getElementById("mista").value = tallennettuLahtoasema;
+    document.getElementById("minne").value = tallennettuKohdeasema;
+
+}
+
 
 // JOHANNA JA HEIDI -----------------------------------
 // HEATUN REITTITIEDON TULOSTAMINEN SIVULLE
@@ -212,7 +280,7 @@ function tilavaihtu() {
             //luodaan tr-elementti
             var lista = document.createElement("tr");
             lista.setAttribute("id", i + "sarake");
-            console.dir(taulu[0]);
+
 
             //luodaan muuttujat (junantyyppi, pvm yms.)
             var tunnus = taulu[i].trainType + taulu[i].trainNumber;
