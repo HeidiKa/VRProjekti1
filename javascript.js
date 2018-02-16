@@ -29,7 +29,6 @@ function asetaAikaJaPaivamaara() {
     } else {
         nykyaika += ":" + aika.getMinutes();
     }
-    console.dir(nykyaika);
 
     document.getElementById("kellonaika").value = nykyaika;
 
@@ -77,7 +76,7 @@ function tilavaihtu1() {
         for (var i = 0; i < asemaArray.length; i++){
             asemienSijainnit.push(asemaArray[i].latitude + ";" + asemaArray[i].longitude);
         }
-        console.dir(asemienSijainnit);
+
     }
 }
 
@@ -95,8 +94,7 @@ function paikanna() {
 function success(data) {
     lat1 = data.coords.latitude;
     lon1 = data.coords.longitude;
-    console.dir(lat1);
-    console.dir(lon1);
+
 }
 
 function failure(error) {
@@ -131,7 +129,6 @@ function lahinAsema() {
 
         if (d < lyhinEtaisyys) {
             lyhinEtaisyys = d;
-            console.dir(d)
             lyhinEtaisuusLat = koordinaatit[0];
             lyhinEtaisyysLon = koordinaatit[1];
         }
@@ -276,15 +273,14 @@ function tilavaihtu() {
         document.getElementById("tallennaSuosikkiReitti").style.display = 'block' // Asettaa suosikkireitin tallennusnapin näkyväksi kun on tehty eka haku
 
         // KÄYTTÄÄKÖ ESIASETETTU NYKYAIKAA VAI KÄYTTÄJÄN KRIJOTITAMAA MYÖHÄISEMPÄÄ AIKAA
-        if (document.getElementById("kellonaika").value > nykyaika) {
+        if (document.getElementById("kellonaika").value > nykyaika || document.getElementById("kellonaika").value < nykyaika ) {
             lahtoaikaSplit = document.getElementById("kellonaika").value.split(":");
-            console.log("isompi");
+
         } else {
             lahtoaikaSplit = nykyaika.split(":");
-            console.log("pienempi");
+
         }
 
-        console.log(lahtoaikaSplit);
 
 
         for (var i = 0; i < jsonData.length; i++) {
@@ -342,7 +338,6 @@ function tilavaihtu() {
                 var aika = new Date(taulu[i].timeTableRows[j].scheduledTime).toLocaleTimeString("fi", ajanEsitys);
                 ajat.push(aika);
             }
-            console.dir(asemat);
 
             var junanTiedot = document.createElement("tr");
             junanTiedot.setAttribute("style", "display: none");
